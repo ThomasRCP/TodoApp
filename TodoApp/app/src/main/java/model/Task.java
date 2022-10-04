@@ -33,6 +33,12 @@ public class Task {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+    
+    //Construtor utilizado quando for executado uma criação de um objeto, logo vai inicializar a construção daquela tarefa no momento que o objeto foi criado.
+    //Quando cria o objeto, a data de criação seja setada nesse momento.
+    public Task(){
+        this.createdAt = new Date();
+    }
 
     public int getId() {
         return id;

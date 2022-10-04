@@ -5,6 +5,7 @@
 package controller;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -18,7 +19,41 @@ import util.ConnectionFactory;
 public class TaskController {
     
     public void save(Task task) {
+        String sql = "INSERT INTO tasks ("
+               + "idProject, "
+               + "name, "
+               + "description, "
+               + "completed, "
+               + "notes, "
+               + "deadline, "
+               + "createdAt, "
+               + "updatedAt"
+               + ") "
+               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
+        Connection connect = null;
+        PreparedStatement statement = null;
+        
+        try {
+            connect = ConnectionFactory.getConnection();
+            statement = connect.prepareStatement(sql);
+            statement.setInt(1, task.getIdProject());
+            statement.setString(2, task.getName());
+            statement.setString(3, task.getDescription());
+            statement.setBoolean(4, task.isIsCompleted());
+            statement.setString(5, task.getNotes());
+            statement.setDate(6, new Date(task.getDeadline().getTime()));
+            statement.setDate(7, new Date(task.getCreatedAt().getTime()));
+            statement.setDate(8, new Date(task.getUpdatedAt().getTime()));
+            statement.execute();
+         
+        //tratamento de exceção de execução
+        } catch (Exception ex) {
+            throw new RuntimeException("Erro ao salvar a tarefa " 
+                    + ex.getMessage(), ex);
+        } finally {
+            ConnectionFactory.closeConnection(connect, statement);
+        }
     }
     
     public void update(Task task) {
@@ -27,7 +62,7 @@ public class TaskController {
     
     public void removeById(int taskId) throws SQLException {
         
-        String sql = "DELETE FORM tasks WHERE id = ?";
+        String sql = "DELETE FROM tasks WHERE id = ?";
         
         Connection conn = null;
         PreparedStatement statement = null;
@@ -36,10 +71,10 @@ public class TaskController {
             statement = conn.prepareStatement(sql);
             statement.setInt(1, taskId);
             statement.execute();
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao deletar a tarefa");
+        } catch (Exception ex) {
+            throw new RuntimeException("Erro ao deletar a tarefa " + ex.getMessage(), ex);
         } finally {
-            ConnectionFactory.closeConnection(conn);
+            ConnectionFactory.closeConnection(conn, statement);
         }
         
     }
