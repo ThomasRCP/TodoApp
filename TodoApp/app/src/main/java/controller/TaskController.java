@@ -20,7 +20,7 @@ import util.ConnectionFactory;
  */
 public class TaskController {
     
-    public void save(Task task) {
+    public void save(Task task) throws SQLException  {
         String sql = "INSERT INTO tasks ("
                + "idProject, "
                + "name, "
@@ -58,7 +58,7 @@ public class TaskController {
         }
     }
     
-    public void update(Task task) {
+    public void update(Task task) throws SQLException {
         
         String sql = "UPDATE tasks SET "
                 + "idProject = ?, "
@@ -94,7 +94,7 @@ public class TaskController {
             
             //Executando a query
             statement.execute();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException("Erro ao atualizar a tarefa " + ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(connection, statement);
@@ -120,8 +120,9 @@ public class TaskController {
             
             //Executando a query
             statement.execute();
-        } catch (Exception ex) {
-            throw new RuntimeException("Erro ao deletar a tarefa " + ex.getMessage(), ex);
+        } catch (SQLException ex) {
+            throw new SQLException("Erro ao deletar a tarefa");
+            //throw new RuntimeException("Erro ao deletar a tarefa " + ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(conn, statement);
         }
@@ -136,6 +137,7 @@ public class TaskController {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         
+        //Lista de tarefas que será devolvida quando a chamada do método acontecer
         List<Task> tasks = new ArrayList<Task>();
         
         try {
@@ -167,7 +169,7 @@ public class TaskController {
                 
             }
             
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException("Erro ao inserir a tarefa " + ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(conn, statement, resultSet);

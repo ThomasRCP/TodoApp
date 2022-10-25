@@ -28,6 +28,11 @@ public class Project {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    //criado para poder funcionar o projectController
+    public Project() {
+        //this.createdAt = new Date();
+    }
     
     //Métodos de acesso Get e Set
 
@@ -73,7 +78,8 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+        //return "Project{" + "id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+        return this.name;
     }
     
     
